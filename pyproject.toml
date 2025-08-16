@@ -1,0 +1,36 @@
+[project]
+name = "ahc002"
+version = "0.1.0"
+description = "AHC002"
+requires-python = ">=3.9"
+dependencies = [
+    "networkx>=3.0",
+    "numpy>=2.0.2",
+    "scipy>=1.13.1",
+    "tqdm>=4.67.1",
+    "matplotlib>=3.5.0",
+]
+
+[tool.uv]
+dev-dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+validate-submission = "validate_submission:main"
+test-single = "test_single:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+include = [
+    "*.py",
+]
+exclude = [
+    "submissions/",
+    "input_data/",
+    "generator_visualizer/",
+    "modules/",
+    "tests/",
+]
