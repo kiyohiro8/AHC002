@@ -114,6 +114,8 @@ def evaluate_submission(
 
         if not success:
             print(f"Error in {input_file}: {error_message}")
+            results.append((input_file, 0, error_message))
+            continue
 
         score, message = evaluate_output(output_line, os.path.join(input_file_dir, input_file))
         print(f"{input_file}: {score}, {message}")

@@ -1,2 +1,2 @@
 # AHC002
-Atcoder Heuristic Contest 002に取り組むためのリポジトリ
+Atcoder Heuristic Contest 002を題材に勉強してみる取り組むためのリポジトリ
