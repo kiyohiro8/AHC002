@@ -21,14 +21,8 @@ class Board:
             ni, nj = self.cur_i + di, self.cur_j + dj
             if 0 <= ni < H and 0 <= nj < W:
                 tile = int(self.tiles[ni, nj])
-                try:
-                    if not self.used_tile_id_dict[tile]:
-                        legal_actions.append((ni, nj, a, self.score + int(self.points[ni, nj])))
-                except:
-                    print(tile)
-                    print(self.used_tile_id_dict)
-                    import sys
-                    sys.exit()
+                if not self.used_tile_id_dict[tile]:
+                    legal_actions.append((ni, nj, a, self.score + int(self.points[ni, nj])))
         return legal_actions
 
     def make_move(self, action):
@@ -78,33 +72,33 @@ class Board:
             return NotImplemented
         return self.score >= other.score
 
-def beam_search(initial_state, beam_width=2, max_depth=200, limit=0.005):
-    # ビームサーチの実装
-    now_beam = []
+def chokudai_search(initial_state, num_beams, beam_width=1, max_depth=200, limit=0.005):
+    # Chokudaiサーチの実装
+    beams = [[] for _ in range(max_depth + 1)]
+    heapq.heappush(beams[0], (-initial_state.score, initial_state))
     best_state = initial_state
-    heapq.heappush(now_beam, (-initial_state.score, initial_state))
-
     start = time.perf_counter()
-    
-    for depth in range(max_depth):
-        next_beam = []
-        # ビーム幅に基づいてノードを展開
-        for _ in range(beam_width):
-            if not now_beam:
-                break
-            current_score, current_state = heapq.heappop(now_beam)
-            legal_actions = current_state.get_legal_actions()
-            #print(legal_actions)
 
-            for action in legal_actions:
-                new_state = current_state.make_move(action)
-                heapq.heappush(next_beam, (-new_state.score, new_state))
-                if new_state.score > best_state.score:
-                    best_state = new_state
+    for _ in range(num_beams):
+        for depth in range(max_depth - 1):
+            # ビーム幅に基づいてノードを展開
+            for _ in range(beam_width):
+                if not beams[depth]:
+                    break
+                current_score, current_state = heapq.heappop(beams[depth])
+                legal_actions = current_state.get_legal_actions()
+                #print(legal_actions)
+
+                for action in legal_actions:
+                    new_state = current_state.make_move(action)
+                    heapq.heappush(beams[depth + 1], (-new_state.score, new_state))
+                    if new_state.score > best_state.score:
+                        best_state = new_state
+            if time.perf_counter() - start > limit:
+                break
         if time.perf_counter() - start > limit:
             break
 
-        now_beam = next_beam
     return best_state.get_first_action(), depth
 
 if __name__ == "__main__":
@@ -143,7 +137,7 @@ if __name__ == "__main__":
     while legal_actions:
         # ビームサーチを実行
         state.actions = []
-        best_action, depth = beam_search(state, beam_width=3, max_depth=20000, limit=0.005)
+        best_action, depth = chokudai_search(state, num_beams=3, beam_width=1, max_depth=1000, limit=0.005)
         if best_action is None:
             break
 
@@ -167,7 +161,7 @@ if __name__ == "__main__":
 
         if not legal_actions:
             break
-        # 時間は1.7秒以内に制限する
+        # 時間は1.5秒以内に制限し、ランダムな着手でプレイアウトを行う
         if time.perf_counter() - start > 1.5:
             # ランダムな着手でプレイアウト
             while legal_actions:
