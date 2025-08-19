@@ -66,6 +66,10 @@ uv sync
 # 例：貪欲法を単一のテストケースで実行
 uv run submissions/002_greedy/script.py < inputs/0000.txt
 ```
+Windowsなら
+```
+Get-Content .\inputs\0000.txt | uv run submissions/002_greedy/script.py
+```
 
 ### 全テストケースで評価
 ```bash
