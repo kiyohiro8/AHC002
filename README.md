@@ -20,7 +20,7 @@ AHC002/
 │   ├── 002_greedy/            # 貪欲法による解法
 │   ├── 003_beam_search/       # ビームサーチによる解法
 │   ├── 004_chokudai_search/   # Chokudaiサーチによる解法
-│   └── 005_bfs/               # 幅優先探索による解法
+│   └── 005_bfs/               # 幅優先探索+動的計画法による解法
 ├── evaluator.py         # 提出スクリプトの評価用プログラム
 ├── pyproject.toml       # プロジェクト設定（uvによる依存関係管理）
 └── CLAUDE.md           # Claude Code用の設定ファイル
